@@ -25,8 +25,36 @@ class DefaultHeader extends Component {
 
     // this.handleLogout = this.handleLogout.bind(this);
     // localStorage.clear();
+    // const userName = localStorage.getItem('userName');
+    // const userPassword = localStorage.getItem('userPassword');
+    // if(userName=== null && userPassword === null)
+    // {
+    //   // this.props.history.push("/login");
+    //   window.location = '/login';
+    // }
+    // else {
+    //   this.props.history.push("/dashboard");
+    // }
   }
 
+
+  componentDidMount () {
+    const userName = localStorage.getItem('userName');
+    const userPassword = localStorage.getItem('userPassword');
+    if(userName=== null && userPassword === null)
+    {
+      // browserHistory.push("/login");
+      window.location = '/login';
+    }
+    // else {
+    //   // browserHistory.push("/dashboard");
+    //   window.location = '/dashboard';
+    // }
+
+     // else if(!isApproved){
+    //   console.log('Vendor NOt approved');
+    // }
+  }
   handleLogout (event) {
     // event.preventDefault();
     localStorage.clear();
@@ -86,18 +114,18 @@ class DefaultHeader extends Component {
               <img src={'../../assets/img/avatars/6.jpg'} className="img-avatar" alt="admin@bootstrapmaster.com" />
             </DropdownToggle>
             <DropdownMenu right>
-              <DropdownItem header tag="div" className="text-center"><strong>Account</strong></DropdownItem>
+              {/* <DropdownItem header tag="div" className="text-center"><strong>Account</strong></DropdownItem>
               <DropdownItem><i className="fa fa-bell-o"></i> Updates<Badge color="info">42</Badge></DropdownItem>
               <DropdownItem><i className="fa fa-envelope-o"></i> Messages<Badge color="success">42</Badge></DropdownItem>
               <DropdownItem><i className="fa fa-tasks"></i> Tasks<Badge color="danger">42</Badge></DropdownItem>
               <DropdownItem><i className="fa fa-comments"></i> Comments<Badge color="warning">42</Badge></DropdownItem>
-              <DropdownItem header tag="div" className="text-center"><strong>Settings</strong></DropdownItem>
+              <DropdownItem header tag="div" className="text-center"><strong>Settings</strong></DropdownItem> */}
               <DropdownItem><i className="fa fa-user"></i> Profile</DropdownItem>
               <DropdownItem><i className="fa fa-wrench"></i> Settings</DropdownItem>
-              <DropdownItem><i className="fa fa-usd"></i> Payments<Badge color="secondary">42</Badge></DropdownItem>
-              <DropdownItem><i className="fa fa-file"></i> Projects<Badge color="primary">42</Badge></DropdownItem>
-              <DropdownItem divider />
-              <DropdownItem><i className="fa fa-shield"></i> Lock Account</DropdownItem>
+              {/* <DropdownItem><i className="fa fa-usd"></i> Payments<Badge color="secondary">42</Badge></DropdownItem> */}
+              {/* <DropdownItem><i className="fa fa-file"></i> Projects<Badge color="primary">42</Badge></DropdownItem> */}
+           
+              {/* <DropdownItem><i className="fa fa-shield"></i> Lock Account</DropdownItem> */}
               <DropdownItem onClick={this.handleLogout.bind(this) /*</DropdownMenu>e => this.props.onLogout(e)*/}><i className="fa fa-lock"></i> Logout</DropdownItem>
             </DropdownMenu>
           </UncontrolledDropdown>

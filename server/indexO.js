@@ -125,16 +125,6 @@ function admin_products (res) {
 //   });
 // });
 
-app.get('/api/updateShop', (req, res) => {
-  dbConnection.query("UPDATE user SET user_status='approved'", function (error, results) {
-    console.log(results);1
-    if (error) throw error;
-
-    
-    return res.send({ error: error, data: results, message: 'success' });
-  });
-});
-
 app.get('/api/user_list', (req, res) => {
   dbConnection.query('SELECT * FROM user', function (error, results, fields) {
     console.log(results);
@@ -143,88 +133,38 @@ app.get('/api/user_list', (req, res) => {
   });
 });
 
-
-
 app.post('/api/saveProduct',(req,res)=>{
+  console.log('The Request : ', req.body);
 
-  console.log('Specification Name : ', req.body.productSpecificationBoxFun);
-  console.log('specification details : ', Object.values(req.body.specificationDetailsFullState));
-​
-  var specificationValues = '';
-  var specificationKey = '';
-  var specificationArray = [];
-  var loopCounter = Object.values(req.body.specificationDetailsFullState).length + 1;
-​
-  console.log(JSON.stringify(specificationArray));
-​
-  new Promise (function (resolve, reject) {
-​
-    for (var i = 0; i < loopCounter; i++) {
-​
-      if (i < Object.values(req.body.specificationDetailsFullState).length) {
-        specificationValues = Object.values(Object.values(req.body.specificationDetailsFullState)[i]);
-  
-        specificationKey = Object.keys(req.body.specificationDetailsFullState)[i];
+  return res.send({success: true});
+
+  // try {
+  //   if ((isNullOrEmpty(req.body.productName) == false) && (isNullOrEmpty(req.body.productPrice) == false) && (isNullOrEmpty(req.body.productSKU) == false) && (req.body.productCategory != 0) && (isNullOrEmpty(req.body.productBrand) == false) && (req.body.vendorId != 0)) {
+
+  //     var insert_sql_query = "INSERT INTO products (product_name, category_id, product_sku, product_specification_id, product_specification_name, product_specification_details, product_specification_details_description, product_full_description, qc_status, image, vendor_id, status) VALUES ('"+req.body.productName+"', '"+req.body.productCategory+"', '"+req.body.productSKU+"', '"+JSON.stringify(req.body.productSPName)+"', '"+JSON.stringify(req.body.productSpecificationBoxFun)+"', '"+JSON.stringify(req.body.productSPD)+"', '"+JSON.stringify(req.body.productSPDFull)+"', '"+JSON.stringify(req.body.productDescriptionFull)+"', '1', '"+JSON.stringify(req.body.images)+"', '"+req.body.vendorId+"', '1' )";
+
+  //     dbConnection.query(insert_sql_query, function (err, result) {
+          
+  //         if (result) {
+  //             console.log("1 record inserted to category");
+  //             return res.send({success: true, server_message: result});
+  //         }
+  //         else {
+  //             console.log('Error to inseret at category : ', err);
+  //             return res.send({success: false, error: err});
+  //         }
+
+  //     });
+  //   }
+  //   else{
+  //     return res.send({success: false});
+  //   }
     
-        specificationArray[i] = specificationKey+' : '+specificationValues[0];
-        
-        console.log('The values are : ', specificationValues[0]);
-        console.log('The values are : ', specificationKey);
-      }
-      else if (i == Object.values(req.body.specificationDetailsFullState).length) {
-        resolve(specificationArray);
-      }
-      else {
-        reject('rejected');
-      }
-​
-    }
-​
-  }).then( function (resolve) {
-    console.log('Testing', JSON.stringify(resolve));
-    // resolve(resolve);
-    return JSON.stringify(resolve);
-​
-  }).then( function (resolve) {
-    console.log('Resolve and Values : ', resolve);
-​
-    console.log('Product Name : ', req.body.productName);
-    console.log('Product Price : ', req.body.productPrice);
-    console.log('Product SKU : ', req.body.productSKUcode);
-    console.log('Product Category : ', req.body.productCategory);
-    console.log('Product Brand : ', req.body.productBrand);
-    console.log('Product Vendor : ', req.body.vendorId);
-​
-    try {
-      if ((isNullOrEmpty(req.body.productName) == false) && (isNullOrEmpty(req.body.productPrice) == false) && (isNullOrEmpty(req.body.productSKUcode) == false) && (req.body.productCategory != 0) && (isNullOrEmpty(req.body.productBrand) == false) && (req.body.vendorId != 0)) {
-  
-        var insert_sql_query = "INSERT INTO products (product_name, category_id, product_sku, product_specification_name, product_specification_details_description, product_full_description, qc_status, image, vendor_id, status) VALUES ('"+req.body.productName+"', '"+req.body.productCategory+"', '"+req.body.productSKUcode+"', '"+JSON.stringify(req.body.productSpecificationBoxFun)+"', '"+resolve+"', '"+JSON.stringify(req.body.productDescriptionFull)+"', '1', '"+JSON.stringify(req.body.images)+"', '"+req.body.vendorId+"', '1' )";
-  
-        dbConnection.query(insert_sql_query, function (err, result) {
-            
-            if (result) {
-                console.log("1 record inserted to category");
-                return res.send({success: true, server_message: result, message: 'DB Success'});
-            }
-            else {
-                console.log('Error to inseret at category : ', err);
-                return res.send({success: false, error: err, message: 'DB Error'});
-            }
-  
-        });
-      }
-      else{
-        return res.send({success: false, message: 'required field'});
-      }
-      
-    }
-    catch (error) {
-        if (error) return res.send({success: false, error: 'Error has occured at the time of insert data to PRODUCTS table', request : req.body, message: 'Exception'});
-    }
-  }).catch(function (reject) {
-    console.log(reject);
-    return res.send({success: false, error: 'Error has occured at the time of insert data to PRODUCTS table', request : req.body, message: 'Promise Exception !!'});
-  })
+  // }
+  // catch (error) {
+  //     if (error) return res.send({success: false, error: 'Error has occured at the time of insert data to PRODUCTS table', request : req.body});
+  // }
+
 });
 
 app.post('/api/vendor-registration',(req,res)=>{
@@ -317,8 +257,6 @@ app.post('/api/user-login', (req, res) => {
       req.session.username = results[0].username;
       req.session.email = results[0].email;
       req.session.user_status = results[0].user_status;
-      req.session.employee_id = results[0].employee_id;
-      req.session.user_type = results[0].user_type;
       sessionStorage = req.session;
 
       console.log(req.session);

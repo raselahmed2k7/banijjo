@@ -23,11 +23,19 @@ import routes from '../../routes';
 const DefaultAside = React.lazy(() => import('./DefaultAside'));
 const DefaultFooter = React.lazy(() => import('./DefaultFooter'));
 const DefaultHeader = React.lazy(() => import('./DefaultHeader'));
+const isAuth = localStorage.user_status=="approved"?true:false;
 
 class DefaultLayout extends Component {
+  constructor(props) {
+    super(props);
 
+    if(!isAuth){
+      this.props.history.push("/rogister");
+    }
+
+  }
   loading = () => <div className="animated fadeIn pt-1 text-center">Loading...</div>
-
+   
   signOut(e) {
     e.preventDefault()
     this.props.history.push('/login')
@@ -38,7 +46,7 @@ class DefaultLayout extends Component {
       <div className="app">
         <AppHeader fixed>
           <Suspense  fallback={this.loading()}>
-            <DefaultHeader onLogout={e=>this.signOut(e)}/>
+            <DefaultHeader/>
           </Suspense>
         </AppHeader>
         <div className="app-body">
@@ -58,26 +66,9 @@ class DefaultLayout extends Component {
                 <Switch>
                   {
                     routes.map((route, idx) => {
-                      console.log(route.name);
-                      if(route.name=="Vendor"){
-                        if (localStorage.getItem('user_type') == 'vendor') {
-
-                        }
-                        else {
-                          return route.component ? (
-                            <Route
-                              key={idx}
-                              path={route.path}
-                              exact={route.exact}
-                              name={route.name}
-                              render={props => (
-                                <route.component {...props} />
-                              )} />
-                          ) : (null);
-                        }
-                      }
-                      else{
+                      if(isAuth){
                         return route.component ? (
+                      
                           <Route
                             key={idx}
                             path={route.path}
@@ -88,8 +79,6 @@ class DefaultLayout extends Component {
                             )} />
                         ) : (null);
                       }
-                      
-                   
                   })
                   }
                   <Redirect from="/" to="/dashboard" />

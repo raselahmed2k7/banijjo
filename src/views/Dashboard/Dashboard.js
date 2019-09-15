@@ -30,6 +30,7 @@ const brandSuccess = getStyle('--success')
 const brandInfo = getStyle('--info')
 const brandWarning = getStyle('--warning')
 const brandDanger = getStyle('--danger')
+const isApproved = localStorage.user_status=='approved'?true:false;
 
 // Card Chart 1
 const cardChartData1 = {
@@ -473,6 +474,7 @@ class Dashboard extends Component {
     {
       this.props.history.push("/login");
     }
+    
 
     console.log('User Name : ', userName);
     console.log('User Password : ', userPassword);

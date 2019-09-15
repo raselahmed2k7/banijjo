@@ -52,29 +52,22 @@ class Login extends Component {
       },
       body: JSON.stringify(this.state)
     })
+
     .then((result) => result.json())
     .then((info) => { 
       if (info.success == true) {
         ToastsStore.success("User  Successfully Logedin !!");
         console.log('Success : ', info.success);
-        console.log('Session : ', info.session);
-        console.log('Session name : ', info.session.username);
-        console.log('Session password : ', info.session.password);
 
         localStorage.setItem('userName', info.session.username);
-        localStorage.setItem('userPassword', info.session.password);
+        localStorage.setItem('email', info.session.email);
+        localStorage.setItem('user_status', info.session.user_status);
         localStorage.setItem('employee_id', info.session.employee_id);
         localStorage.setItem('user_type', info.session.user_type);
-        
-        console.log(localStorage);
 
-        setTimeout(
-          function() {
-            this.props.history.push("/dashboard");
-          }
-          .bind(this),
-          3000
-        );
+        const isApproved = localStorage.user_status=='approved'?true:false;
+        isApproved===true ? this.props.history.push("/dashboard"):this.props.history.push("/rogister");
+        console.log("consoling localstorage",isApproved);
       }
       else {
         ToastsStore.warning("User Logedin Failed. Please try again !!");

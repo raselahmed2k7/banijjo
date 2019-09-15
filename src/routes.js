@@ -1,5 +1,6 @@
 import React from 'react';
-
+console.log('localstorage in route',localStorage);
+console.log('localstorage in route',localStorage.user_status);
 const Breadcrumbs = React.lazy(() => import('./views/Base/Breadcrumbs'));
 const Cards = React.lazy(() => import('./views/Base/Cards'));
 const Carousels = React.lazy(() => import('./views/Base/Carousels'));
@@ -57,6 +58,7 @@ const routes = [
   { path: '/', exact: true, name: 'Home' },
   { path: '/dashboard', name: 'Dashboard', component: Dashboard },
   { path: '/theme', exact: true, name: 'Theme', component: Colors },
+
 
   { path: '/theme/colors', name: 'Colors', component: Colors },
   { path: '/product/products', name: 'Products', component: Products },
