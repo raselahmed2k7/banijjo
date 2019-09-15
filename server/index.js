@@ -5,6 +5,7 @@ const app = express();
 var session = require('express-session');
 var fs = require('fs');
 const multer = require('multer');
+var promise = require('promise');
 
 // const upload = multer({dest: 'upload/'});
 var storage = multer.diskStorage({
@@ -134,36 +135,103 @@ app.get('/api/user_list', (req, res) => {
 });
 
 app.post('/api/saveProduct',(req,res)=>{
-  console.log('The Request : ', req.body);
+  // console.log('The Request : ', req.body);
 
-  return res.send({success: true});
+  console.log('Specification Name : ', req.body.productSpecificationBoxFun);
+  console.log('specification details : ', Object.values(req.body.specificationDetailsFullState));
 
-  // try {
-  //   if ((isNullOrEmpty(req.body.productName) == false) && (isNullOrEmpty(req.body.productPrice) == false) && (isNullOrEmpty(req.body.productSKU) == false) && (req.body.productCategory != 0) && (isNullOrEmpty(req.body.productBrand) == false) && (req.body.vendorId != 0)) {
+  var specificationValues = '';
+  var specificationKey = '';
+  var specificationArray = [];
+  var loopCounter = Object.values(req.body.specificationDetailsFullState).length + 1;
 
-  //     var insert_sql_query = "INSERT INTO products (product_name, category_id, product_sku, product_specification_id, product_specification_name, product_specification_details, product_specification_details_description, product_full_description, qc_status, image, vendor_id, status) VALUES ('"+req.body.productName+"', '"+req.body.productCategory+"', '"+req.body.productSKU+"', '"+JSON.stringify(req.body.productSPName)+"', '"+JSON.stringify(req.body.productSpecificationBoxFun)+"', '"+JSON.stringify(req.body.productSPD)+"', '"+JSON.stringify(req.body.productSPDFull)+"', '"+JSON.stringify(req.body.productDescriptionFull)+"', '1', '"+JSON.stringify(req.body.images)+"', '"+req.body.vendorId+"', '1' )";
+  console.log(JSON.stringify(specificationArray));
 
-  //     dbConnection.query(insert_sql_query, function (err, result) {
-          
-  //         if (result) {
-  //             console.log("1 record inserted to category");
-  //             return res.send({success: true, server_message: result});
-  //         }
-  //         else {
-  //             console.log('Error to inseret at category : ', err);
-  //             return res.send({success: false, error: err});
-  //         }
+  new Promise (function (resolve, reject) {
 
-  //     });
-  //   }
-  //   else{
-  //     return res.send({success: false});
-  //   }
+    for (var i = 0; i < loopCounter; i++) {
+
+      if (i < Object.values(req.body.specificationDetailsFullState).length) {
+        specificationValues = Object.values(Object.values(req.body.specificationDetailsFullState)[i]);
+  
+        specificationKey = Object.keys(req.body.specificationDetailsFullState)[i];
     
+        specificationArray[i] = specificationKey+' : '+specificationValues[0];
+        
+        console.log('The values are : ', specificationValues[0]);
+        console.log('The values are : ', specificationKey);
+      }
+      else if (i == Object.values(req.body.specificationDetailsFullState).length) {
+        resolve(specificationArray);
+      }
+      else {
+        reject('rejected');
+      }
+
+    }
+
+  }).then( function (resolve) {
+    console.log('Testing', JSON.stringify(resolve));
+    // resolve(resolve);
+    return JSON.stringify(resolve);
+
+  }).then( function (resolve) {
+    console.log('Resolve and Values : ', resolve);
+
+    console.log('Product Name : ', req.body.productName);
+    console.log('Product Price : ', req.body.productPrice);
+    console.log('Product SKU : ', req.body.productSKUcode);
+    console.log('Product Category : ', req.body.productCategory);
+    console.log('Product Brand : ', req.body.productBrand);
+    console.log('Product Vendor : ', req.body.vendorId);
+
+    try {
+      if ((isNullOrEmpty(req.body.productName) == false) && (isNullOrEmpty(req.body.productPrice) == false) && (isNullOrEmpty(req.body.productSKUcode) == false) && (req.body.productCategory != 0) && (isNullOrEmpty(req.body.productBrand) == false) && (req.body.vendorId != 0)) {
+  
+        var insert_sql_query = "INSERT INTO products (product_name, category_id, product_sku, product_specification_name, product_specification_details_description, product_full_description, qc_status, image, vendor_id, status) VALUES ('"+req.body.productName+"', '"+req.body.productCategory+"', '"+req.body.productSKUcode+"', '"+JSON.stringify(req.body.productSpecificationBoxFun)+"', '"+resolve+"', '"+JSON.stringify(req.body.productDescriptionFull)+"', '1', '"+JSON.stringify(req.body.images)+"', '"+req.body.vendorId+"', '1' )";
+  
+        dbConnection.query(insert_sql_query, function (err, result) {
+            
+            if (result) {
+                console.log("1 record inserted to category");
+                return res.send({success: true, server_message: result, message: 'DB Success'});
+            }
+            else {
+                console.log('Error to inseret at category : ', err);
+                return res.send({success: false, error: err, message: 'DB Error'});
+            }
+  
+        });
+      }
+      else{
+        return res.send({success: false, message: 'required field'});
+      }
+      
+    }
+    catch (error) {
+        if (error) return res.send({success: false, error: 'Error has occured at the time of insert data to PRODUCTS table', request : req.body, message: 'Exception'});
+    }
+
+    // return res.send({success: true, message: 'Check Promise'});
+
+  }).catch(function (reject) {
+    console.log(reject);
+    return res.send({success: false, error: 'Error has occured at the time of insert data to PRODUCTS table', request : req.body, message: 'Promise Exception !!'});
+  })
+
+  // console.log(JSON.stringify(specificationName));
+
+  // for (var i = 0; i < req.body.specificationDetailsFullState.length; i++) {
+  //   // var splited = req.body.specificationDetailsFullState[i].split(':');
+  //   // specificationDetails[i] = splited;
+  //   console.log(req.body.specificationDetailsFullState[i]); 
   // }
-  // catch (error) {
-  //     if (error) return res.send({success: false, error: 'Error has occured at the time of insert data to PRODUCTS table', request : req.body});
-  // }
+  // console.log('')
+  // console.log(JSON.stringify( req.body.specificationDetailsFullState));
+
+  // return res.send({success: true, message: 'Check Promise'});
+
+  
 
 });
 
@@ -249,13 +317,15 @@ app.post('/api/user-login', (req, res) => {
 
   var sessionStorage = '';
 
-  select_sql_query = "SELECT id FROM user WHERE username='"+req.body.username+"' AND password='"+req.body.password+"'";
-
+  select_sql_query = "SELECT id, employee_id, user_type FROM user WHERE username='"+req.body.username+"' AND password='"+req.body.password+"'";
+  console.log(select_sql_query);
   dbConnection.query(select_sql_query, function (error, results, fields) {
     console.log(results);
     if (results.length > 0) {
       req.session.username = req.body.username;
       req.session.password = req.body.password;
+      req.session.employee_id = results[0].employee_id;
+      req.session.user_type = results[0].user_type;
       sessionStorage = req.session;
 
       console.log(req.session);
@@ -265,7 +335,8 @@ app.post('/api/user-login', (req, res) => {
       var success = false;
     }
     if (error) throw error;
-    return res.send({ error: error, success: success, session: sessionStorage, message: 'sepecification name list.' });
+    return res.send({ error: error, success: success, session: sessionStorage, message: 'user info .' });
+    // console.log('Message : ', success);
   });
 });
 

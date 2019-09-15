@@ -71,6 +71,8 @@ export default {
         },
       ],
     },
+
+    // localStorage.getItem('user_type') == 'vendor' ?
     
     {
       name: 'Customer',
